@@ -1,0 +1,128 @@
+[gd_scene load_steps=3 format=3 uid="uid://bko545hp5ectp"]
+
+[sub_resource type="GDScript" id="GDScript_nb1lc"]
+resource_name = "crafting"
+script/source = "extends Area3D
+
+
+var recipes: Array[Recipe] = [
+	Recipe.new([\"Stick\", \"Rock\"], [\"Axe\"])
+]
+var active_recipes: Array[Recipe]
+
+
+func _physics_process(_delta):
+	var grps = _get_item_groups()
+	for g in grps:
+		var rcps = _get_recipes_from_items(g)
+		for r in rcps:
+			if _has_recipe(r): continue
+			_on_recipe_found(r)
+
+
+func _get_bodies_close_to(body: Node3D) -> Array[Node3D]:
+	var bds: Array[Node3D] = []
+	var ovlps = get_overlapping_bodies()
+	for b in ovlps:
+		if b == body: continue
+		if body.global_position.distance_to(b.global_position) <= 1.0:
+			bds.append(b)
+	return bds
+
+
+func _get_carfting_name(n: String) -> String:
+	return n.rstrip(\"0123456789\")
+
+
+func _get_crafting_names(bodies: Array[Node3D]) -> Dictionary:
+	var ns = {}
+	for b in bodies:
+		ns[b] = _get_carfting_name(b.name)
+	return ns
+
+
+func _get_item_groups() -> Array[Array]:
+	var grps: Array[Array] = []
+	var bds = get_overlapping_bodies()
+	for b in bds:
+		var grp: Array[Node3D] = []
+		grp.append(b)
+		for b2 in bds:
+			if b == b2: continue
+			if b.global_position.distance_to(b2.global_position) < 1.0:
+				grp.append(b2)
+		grps.append(grp)
+	return grps
+
+
+func _get_median_point(items: Array[Node3D]) -> Vector3:
+	var p = Vector3.ZERO
+	for i in items:
+		p += i.global_position
+	return p / items.size()
+
+
+func _get_recipes(with: Node3D, items: Array[Node3D]) -> Array[Recipe]:
+	var rcps = []
+	for r in recipes:
+		if not r.has_item(with): continue
+		var itms: Array[Node3D] = items.duplicate()
+		itms.append(with)
+		var cntnd_itms = r.get_contained_items(itms)
+		if cntnd_itms.size() == r.items.size():
+			var nr = Recipe.new(r.items, r.rewards)
+			nr.physical_items = cntnd_itms
+			rcps.append([r, cntnd_itms])
+			break
+	return rcps
+
+
+func _get_recipes_from_items(items: Array[Node3D]) -> Array[Recipe]:
+	var rcps: Array[Recipe] = []
+	for r in recipes:
+		var cntnd_itms = r.get_contained_items(items)
+		if cntnd_itms.size() == r.items.size():
+			var nr = Recipe.new(r.items, r.rewards)
+			nr.physical_items = cntnd_itms
+			rcps.append(nr)
+	return rcps
+
+func val_cmp(arr1: Array, arr2: Array) -> bool:
+	if arr1.size() != arr2.size(): return false
+	for i in arr1:
+		if not arr2.has(i): return false
+	return true
+
+func _has_recipe(recipe: Recipe) -> bool:
+	for r in active_recipes:
+		if val_cmp(r.physical_items, recipe.physical_items): return true
+	return false
+
+
+func _on_craftable_destroyed(craftable: Craftable):
+	active_recipes.erase(craftable.recipe)
+
+
+func _on_recipe_found(recipe: Recipe):
+	var crftbl_scn = load(\"res://player/crafting/craftable.tscn\") as PackedScene
+	var crftbl = crftbl_scn.instantiate() as Craftable
+	crftbl.recipe = recipe
+	var f = func ():
+		_on_craftable_destroyed(crftbl)
+	crftbl.destroyed.connect(f)
+	get_tree().current_scene.add_child(crftbl, true)
+	crftbl.global_position = _get_median_point(recipe.physical_items)
+	active_recipes.append(recipe)
+"
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ykyf2"]
+radius = 3.0
+
+[node name="Crafting" type="Area3D"]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = SubResource("GDScript_nb1lc")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_ykyf2")

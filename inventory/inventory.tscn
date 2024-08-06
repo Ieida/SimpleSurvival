@@ -1,0 +1,506 @@
+[gd_scene load_steps=3 format=3 uid="uid://ctuddlqk507ju"]
+
+[ext_resource type="Texture2D" uid="uid://h5tqt57ifsjp" path="res://icon.svg" id="1_2m6m4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xe33h"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+
+[node name="Inventory" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_xe33h")
+
+[node name="GridContainer" type="GridContainer" parent="ScrollContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 13
+theme_override_constants/v_separation = 13
+columns = 7
+
+[node name="Slot" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot9" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot9"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot9/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot2" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot2"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot2/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot3" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot3"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot3/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot4" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot4"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot4/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot5" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot5"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot5/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot6" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot6"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot6/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot7" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot7"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot7/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot8" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot8"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot8/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot10" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot10"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot10/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot11" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot11"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot11/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot12" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot12"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot12/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot13" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot13"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot13/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot14" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot14"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot14/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot15" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot15"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot15/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot16" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot16"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot16/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot17" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot17"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot17/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot18" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot18"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot18/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot19" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot19"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot19/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot20" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot20"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot20/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot21" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot21"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot21/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot22" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot22"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot22/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot23" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot23"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot23/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot24" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot24"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot24/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot25" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot25"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot25/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot26" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot26"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot26/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot27" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot27"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot27/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot28" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot28"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot28/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot29" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot29"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot29/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")
+
+[node name="Slot30" type="PanelContainer" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/GridContainer/Slot30"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/GridContainer/Slot30/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_2m6m4")

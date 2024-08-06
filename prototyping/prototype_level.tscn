@@ -1,0 +1,55 @@
+[gd_scene load_steps=11 format=3 uid="uid://b1230j8yyhor4"]
+
+[ext_resource type="Material" uid="uid://cgo1mosyjwwci" path="res://prototyping/proto_material.tres" id="1_4xjcm"]
+[ext_resource type="PackedScene" uid="uid://bhndpty3cacef" path="res://player/player.tscn" id="2_6lygn"]
+[ext_resource type="PackedScene" uid="uid://d0g4jsyqa7ebg" path="res://items/stick/stick.tscn" id="3_1s3jh"]
+[ext_resource type="PackedScene" uid="uid://b00vfdu4mbx4u" path="res://items/rock/rock.tscn" id="4_q64oo"]
+[ext_resource type="PackedScene" uid="uid://b35nohdkxqmgk" path="res://vegetation/tree/tree.tscn" id="5_dsxw1"]
+[ext_resource type="PackedScene" uid="uid://covwkwrpdr5ij" path="res://items/coconut/coconut.tscn" id="6_h18rv"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0odv4"]
+
+[sub_resource type="Sky" id="Sky_g0sm8"]
+sky_material = SubResource("ProceduralSkyMaterial_0odv4")
+
+[sub_resource type="Environment" id="Environment_wb4y8"]
+background_mode = 2
+sky = SubResource("Sky_g0sm8")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_wdgwk"]
+size = Vector2(2000, 2000)
+
+[node name="PrototypeLevel" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_wb4y8")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(0.707107, 0.5, -0.5, 0, 0.707107, 0.707107, 0.707107, -0.5, 0.5, 0, 0, 0)
+shadow_enabled = true
+
+[node name="CSGMesh3D" type="CSGMesh3D" parent="."]
+use_collision = true
+mesh = SubResource("PlaneMesh_wdgwk")
+material = ExtResource("1_4xjcm")
+
+[node name="Player" parent="." instance=ExtResource("2_6lygn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -2.5)
+use_collision = true
+size = Vector3(3, 1, 1)
+material = ExtResource("1_4xjcm")
+
+[node name="Stick" parent="." instance=ExtResource("3_1s3jh")]
+transform = Transform3D(0.836516, 0.224144, -0.5, 0.399519, 0.375, 0.836516, 0.375, -0.899519, 0.224144, -0.6, 1.48044, -2.54017)
+
+[node name="Rock" parent="." instance=ExtResource("4_q64oo")]
+transform = Transform3D(0.813548, 0.581498, 0, -0.581498, 0.813548, 0, 0, 0, 1, 0.399378, 1.39272, -2.44956)
+
+[node name="Tree" parent="." instance=ExtResource("5_dsxw1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.01051, 0, -1.07088)
+
+[node name="Coconut" parent="." instance=ExtResource("6_h18rv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, -1)

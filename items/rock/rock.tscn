@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://b00vfdu4mbx4u"]
+
+[ext_resource type="PackedScene" uid="uid://6m4n21ob5p7" path="res://items/rock/rock.glb" id="2_f3pym"]
+
+[node name="Rock" type="RigidBody3D"]
+collision_layer = 2
+collision_mask = 3
+
+[node name="CollisionPolygon3D" type="CollisionPolygon3D" parent="."]
+depth = 0.3
+polygon = PackedVector2Array(-0.0239282, 0.239282, -0.131605, 0.0518443, -0.00797606, -0.203389, 0.139581, 0.0957127)
+
+[node name="rock2" parent="." instance=ExtResource("2_f3pym")]

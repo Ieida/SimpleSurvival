@@ -1,0 +1,203 @@
+[gd_scene load_steps=8 format=3 uid="uid://bhjiyis7jmu8l"]
+
+[ext_resource type="PackedScene" uid="uid://c35k73upoebnf" path="res://items/axe/axe.tscn" id="1_6oo4w"]
+[ext_resource type="AudioStream" uid="uid://b6yn1abp0ksuv" path="res://player/viewmodels/sounds/axe_swing.mp3" id="2_at1dh"]
+
+[sub_resource type="GDScript" id="GDScript_ftyf2"]
+resource_name = "axe"
+script/source = "extends Viewmodel
+
+
+@export var swing_cooldown: float = 1
+@export var swing_distance: float = 1.25
+@export var damage: float = 100
+
+
+var can_swing: bool
+var swing_timer: Timer
+var _swing_raycast: RayCast3D
+
+
+func _ready():
+	super._ready()
+	
+	animation_player.animation_finished.connect(_on_animation_finished)
+	
+	_swing_raycast = RayCast3D.new()
+	_swing_raycast.enabled = false
+	_swing_raycast.target_position = Vector3.FORWARD * swing_distance
+	_swing_raycast.set_collision_mask_value(5, true)
+	_swing_raycast.hit_from_inside = true
+	_swing_raycast.collide_with_areas = true
+	add_child(_swing_raycast, false, Node.INTERNAL_MODE_FRONT)
+	
+	can_swing = true
+
+
+func _deal_damage():
+	_swing_raycast.force_raycast_update()
+	if not _swing_raycast.is_colliding(): return
+	
+	var htbx = _swing_raycast.get_collider() as Hitbox
+	if not htbx: return
+	
+	var ht_inf = HitInfo.new()
+	ht_inf.damage = damage
+	ht_inf.position = _swing_raycast.get_collision_point()
+	ht_inf.normal = _swing_raycast.get_collision_normal()
+	htbx.hit(ht_inf)
+
+
+func _on_animation_finished(anim_name: StringName):
+	if anim_name == &\"swing\":
+		can_swing = true
+
+
+func _on_swing_timer_timeout():
+	can_swing = true
+
+
+func _swing():
+	if not can_swing: return
+	can_swing = false
+	
+	animation_player.play(&\"swing\")
+
+
+func main_action():
+	_swing()
+"
+
+[sub_resource type="Animation" id="Animation_ytc4u"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Item:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.155, -0.315, -0.34)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Item:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, -0.287979)]
+}
+
+[sub_resource type="Animation" id="Animation_gnb8g"]
+resource_name = "idle"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Item:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.155, -0.315, -0.34)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Item:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, -0.287979)]
+}
+
+[sub_resource type="Animation" id="Animation_yaf62"]
+resource_name = "swing"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Item:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0.155, -0.315, -0.34), Vector3(0.190114, -0.205246, -0.218902), Vector3(-0.335, -0.514, -0.635), Vector3(-0.387034, -0.538721, -0.591506), Vector3(0.169943, -0.266124, -0.298815), Vector3(0.155, -0.315, -0.34)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Item:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, -0.296706), Vector3(0.251241, -0.0785508, -0.430218), Vector3(-0.366184, 2.11124, -1.65668), Vector3(-0.349556, 2.26704, -1.71136), Vector3(0.0931547, -0.0285668, -0.298038), Vector3(0, 0, -0.296706)]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.2),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"_deal_damage"
+}]
+}
+tracks/3/type = "method"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Item/AxeSwing")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [0.0],
+"method": &"play"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bnx0u"]
+_data = {
+"RESET": SubResource("Animation_ytc4u"),
+"idle": SubResource("Animation_gnb8g"),
+"swing": SubResource("Animation_yaf62")
+}
+
+[node name="Axe" type="Node3D"]
+script = SubResource("GDScript_ftyf2")
+
+[node name="Item" type="Node3D" parent="."]
+transform = Transform3D(0.95882, 0.284015, 0, -0.284015, 0.95882, 0, 0, 0, 1, 0.155, -0.315, -0.34)
+
+[node name="Placeholder" parent="Item" instance=ExtResource("1_6oo4w")]
+
+[node name="AxeSwing" type="AudioStreamPlayer3D" parent="Item"]
+stream = ExtResource("2_at1dh")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_bnx0u")
+}
+
+[node name="Camera3D" type="Camera3D" parent="."]

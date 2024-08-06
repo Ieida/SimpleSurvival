@@ -1,0 +1,62 @@
+[gd_scene load_steps=3 format=3 uid="uid://bko545hp5ectp"]
+
+[sub_resource type="GDScript" id="GDScript_nb1lc"]
+resource_name = "crafting"
+script/source = "extends Area3D
+
+
+var recipes: Array[Recipe] = [
+	Recipe.new([\"Stick\", \"Rock\"], [\"Axe\"])
+]
+
+
+func _ready():
+	body_entered.connect(_on_body_entered)
+
+
+func _get_carfting_name(n: String) -> String:
+	return n.rstrip(\"0123456789\")
+
+
+func _get_crafting_names(bodies: Array[Node3D]) -> Dictionary:
+	var ns = {}
+	for b in bodies:
+		ns[b] = _get_carfting_name(b.name)
+	return ns
+
+
+func _get_recipes(items: Array[RigidBody3D]) -> Array[Recipe]:
+	var rcps = []
+	var itms = _get_crafting_names(items as Array[Node3D])
+	for r in recipes:
+		if r.contains_items(itms):
+			rcps.append(r)
+	return rcps
+
+
+func _on_body_entered(body: Node3D):
+	if body is RigidBody3D:
+		var bs = body.get_colliding_bodies()
+		var rcps = _get_recipes(bs)
+		if rcps.size() == 0: return
+		for r in rcps:
+			pass
+		print(rcps)
+
+
+func _on_recipes_found(rcps: Array[Dictionary]):
+	for r in rcps:
+		pass
+"
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ykyf2"]
+radius = 3.0
+
+[node name="Crafting" type="Area3D"]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = SubResource("GDScript_nb1lc")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_ykyf2")

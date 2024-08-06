@@ -1,0 +1,77 @@
+[gd_scene load_steps=6 format=3 uid="uid://c2c0fhwprj0wy"]
+
+[ext_resource type="PackedScene" uid="uid://cj7kpqxw02ljs" path="res://player/viewmodels/viewmodel.tscn" id="1_8c2t4"]
+[ext_resource type="PackedScene" uid="uid://d0g4jsyqa7ebg" path="res://items/stick/stick.tscn" id="2_tk0w0"]
+
+[sub_resource type="Animation" id="Animation_fdtmy"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Item:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.2, -0.2, -0.29)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Item:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.1309, 0, -0.261799)]
+}
+
+[sub_resource type="Animation" id="Animation_sj07e"]
+resource_name = "idle"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Item:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.042, -0.38, -0.388)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Item:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.481239, 0.731534, 0.732828)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_65oy5"]
+_data = {
+"RESET": SubResource("Animation_fdtmy"),
+"idle": SubResource("Animation_sj07e")
+}
+
+[node name="Stick" instance=ExtResource("1_8c2t4")]
+
+[node name="Item" parent="." index="0"]
+transform = Transform3D(0.965926, 0.258819, 0, -0.256604, 0.957662, -0.130527, -0.0337827, 0.126079, 0.991445, 0.2, -0.2, -0.29)
+
+[node name="Placeholder" parent="Item" index="0" instance=ExtResource("2_tk0w0")]
+
+[node name="AnimationPlayer" parent="." index="1"]
+libraries = {
+"": SubResource("AnimationLibrary_65oy5")
+}
+autoplay = "idle"

@@ -1,0 +1,702 @@
+[gd_scene load_steps=22 format=3 uid="uid://bhndpty3cacef"]
+
+[ext_resource type="Script" path="res://player/interactor.gd" id="2_ig5ms"]
+[ext_resource type="Script" path="res://player/inventory.gd" id="3_cu2ky"]
+[ext_resource type="Texture2D" uid="uid://bloo0hmavkrsm" path="res://progress_circle.svg" id="3_v2bbm"]
+[ext_resource type="PackedScene" uid="uid://bko545hp5ectp" path="res://player/crafting/crafting.tscn" id="3_xbkfb"]
+
+[sub_resource type="GDScript" id="GDScript_06htj"]
+resource_name = "player"
+script/source = "extends CharacterBody3D
+
+
+@export_category(\"Dependencies\")
+@export var camera: Camera3D
+@export_category(\"Settings\")
+@export var gravity: Vector3 = Vector3(0, -1.6, 0)
+@export var speed: float = 3
+@export var run_speed: float = 5
+@export var smoothness: float = 0.1
+@export_range(0, 1) var air_control: float = 0.3
+@export var jump_force: float = 2
+
+
+var move_input: Vector2
+var jump_input: InputEventKey = InputEventKey.new()
+var run_input: bool
+var crouch_input: bool
+var is_crouching: bool
+
+
+func _unhandled_input(event):
+	if event.is_action_type():
+		if event.is_action(&\"move_left\"):
+			_update_move_input()
+		elif event.is_action(&\"move_right\"):
+			_update_move_input()
+		elif event.is_action(&\"move_front\"):
+			_update_move_input()
+		elif event.is_action(&\"move_back\"):
+			_update_move_input()
+		elif event.is_action(&\"jump\"):
+			jump_input = event
+		elif event.is_action(&\"run\"):
+			run_input = event.is_pressed()
+		elif event.is_action(&\"crouch\") and not crouch_input:
+			crouch_input = event.is_pressed() and not event.is_echo()
+
+
+func _physics_process(delta):
+	# Add the gravity.
+	if not is_on_floor():
+		velocity += gravity * delta
+
+	# Handle jump.
+	if jump_input.pressed and is_on_floor():
+		velocity.y = jump_force
+	
+	# Crouch
+	if crouch_input:
+		if is_crouching:
+			stand()
+		else:
+			crouch()
+	
+	var flr_nrml = get_floor_normal() if is_on_floor() else Vector3.UP
+	var fwd = -flr_nrml.cross(camera.global_basis.x)
+	var rght = flr_nrml.cross(fwd)
+	var direction = (rght * move_input.x + fwd * move_input.y).normalized()
+	if direction:
+		var spd = speed
+		if not is_on_floor(): spd *= air_control
+		elif run_input: spd = run_speed
+		if is_crouching: spd *= 0.5
+		var t = direction * spd
+		var v = Vector3(velocity.x, 0, velocity.z)
+		var m = v.move_toward(t, delta / smoothness)
+		velocity.x = m.x
+		velocity.z = m.z
+	elif is_on_floor():
+		var v = Vector3(velocity.x, 0, velocity.z)
+		var m = v.move_toward(Vector3.ZERO, delta / smoothness)
+		velocity.x = m.x
+		velocity.z = m.z
+
+	move_and_slide()
+	
+	_reset_input.call_deferred()
+
+
+func _reset_input():
+	crouch_input = false
+
+
+func _update_move_input():
+	move_input = Input.get_vector(\"move_left\", \"move_right\", \"move_front\", \"move_back\")
+
+
+func crouch():
+	is_crouching = true
+	camera.position.y = 0
+
+
+func stand():
+	is_crouching = false
+	camera.position.y = 0.85
+"
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4pkox"]
+radius = 0.425
+height = 1.7
+
+[sub_resource type="SeparationRayShape3D" id="SeparationRayShape3D_auo46"]
+length = 0.85
+
+[sub_resource type="GDScript" id="GDScript_liksb"]
+resource_name = "player_camera"
+script/source = "extends Camera3D
+
+
+@export var sensitivity: float = 0.1
+var x: float
+
+
+func _unhandled_input(event):
+	if event is InputEventMouseMotion:
+		_on_mouse_motion(event.relative)
+
+
+func _on_mouse_motion(motion: Vector2):
+	var mx = deg_to_rad(-motion.x) * sensitivity
+	var my = deg_to_rad(-motion.y) * sensitivity
+	rotate_y(mx)
+	x += my
+	if rad_to_deg(x) > 90.0: x = deg_to_rad(90)
+	elif rad_to_deg(x) < -90.0: x = deg_to_rad(-90)
+	rotation.x = x
+"
+
+[sub_resource type="GDScript" id="GDScript_emaw1"]
+resource_name = "viewmodel_handler"
+script/source = "extends Node
+
+
+@export var stats: Array[Node]
+var is_occupied: bool
+var _interaction_handler: InteractionHandler
+var _stats: Dictionary
+
+
+func _ready():
+	for s in stats:
+		_stats[s.name] = s
+	
+	_interaction_handler = InteractionHandler.new()
+	_interaction_handler.can_handle = can_handle
+	_interaction_handler.handle = handle
+	_interaction_handler.focus_gained = _focus_gained
+	_interaction_handler.focus_lost = _focus_lost
+	_interaction_handler.freed = _freed
+	_interaction_handler.duration = 1
+	$\"../Interactor\".add_handler(_interaction_handler)
+
+
+func _decapitalize(n: String):
+	n = n.rstrip(\"0123456789\")
+	var nn = \"\"
+	for i in n.length():
+		if i == 0:
+			nn += n[i].to_lower()
+			continue
+		var c = n[i]
+		if c == c.to_upper():
+			nn += \"_\"
+			nn += c.to_lower()
+		else:
+			nn += c
+	return nn
+
+
+func _focus_gained(_interactable: Node):
+	_interaction_handler.interaction_hint = \"Pick up\"
+
+
+func _focus_lost():
+	pass
+
+
+func _freed():
+	pass
+
+
+func _on_viewmodel_destroyed():
+	is_occupied = false
+
+
+func can_handle(node: Node) -> bool:
+	return not is_occupied and node is RigidBody3D and ResourceLoader.exists(\"res://player/viewmodels/%s.tscn\" % _decapitalize(node.name), \"PackedScene\")
+
+
+func create_viewmodel(item: RigidBody3D):
+	var vs = load(\"res://player/viewmodels/%s.tscn\" % _decapitalize(item.name)) as PackedScene
+	var v = vs.instantiate() as Viewmodel
+	if v is EdibleViewmodel:
+		v.stats = _stats
+	v.destroyed.connect(_on_viewmodel_destroyed)
+	v.get_node(\"Item\").add_child(item, true)
+	item.transform = Transform3D.IDENTITY
+	get_parent().add_child(v, true)
+	is_occupied = true
+
+
+func handle(node: RigidBody3D):
+	node.freeze = true
+	node.process_mode = Node.PROCESS_MODE_DISABLED
+	node.get_parent().remove_child(node)
+	node.name = _decapitalize(node.name).capitalize().lstrip(\" \")
+	create_viewmodel(node)
+"
+
+[sub_resource type="GDScript" id="GDScript_ao3xj"]
+resource_name = "crafting_handler"
+script/source = "extends Node
+
+
+var interaction_handler: InteractionHandler
+
+
+func _ready():
+	interaction_handler = InteractionHandler.new()
+	interaction_handler.can_handle = can_handle
+	interaction_handler.handle = handle
+	interaction_handler.focus_gained = _on_focus_gained
+	interaction_handler.focus_lost = _on_focus_lost
+	interaction_handler.freed = _on_freed
+	interaction_handler.duration = 3
+	$\"../Interactor\".add_handler(interaction_handler)
+
+
+func _get_carfting_name(n: String) -> String:
+	return n.rstrip(\"0123456789\")
+
+
+func _get_crafting_names(nodes: Array[Node3D]) -> PackedStringArray:
+	var ns = [] as PackedStringArray
+	for n in nodes:
+		ns.append(_get_carfting_name(n.name))
+	return ns
+
+
+func _on_focus_gained(node: Node):
+	var crftbl = node as Craftable
+	var n = str(crftbl.recipe.rewards)
+	n = n.trim_prefix(\"[\\\"\")
+	n = n.trim_suffix(\"\\\"]\")
+	var itms = \" + \".join(crftbl.recipe.items)
+	interaction_handler.interaction_hint = \"Craft %s\" % itms
+
+
+func _on_focus_lost():
+	pass
+
+
+func _on_freed():
+	pass
+
+
+func can_handle(node: Node) -> bool:
+	return node is Craftable
+
+
+func handle(node: Node):
+	var crftbl = node as Craftable
+	crftbl.craft()
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mlbqo"]
+bg_color = Color(0, 0, 0, 0.498039)
+
+[sub_resource type="GDScript" id="GDScript_5tn73"]
+resource_name = "pause_menu"
+script/source = "extends Control
+
+
+@export var player: CharacterBody3D
+var is_open: bool = true
+
+
+func _unhandled_input(event):
+	if is_open:
+		get_viewport().set_input_as_handled()
+	
+	if event.is_action(&\"ui_cancel\"):
+		if event.is_pressed() and not event.is_echo():
+			_on_input()
+
+
+func _on_input():
+	if is_open: close()
+	else: open()
+
+
+func close():
+	hide()
+	is_open = false
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
+func open():
+	show()
+	is_open = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	player.move_input = Vector2.ZERO
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6gnuo"]
+bg_color = Color(0, 0, 0, 0.498039)
+
+[sub_resource type="GDScript" id="GDScript_jwj28"]
+resource_name = "stats"
+script/source = "extends Control
+
+
+var is_open: bool = true
+
+
+func _ready():
+	close()
+
+
+func _unhandled_input(event):
+	if is_open:
+		get_viewport().set_input_as_handled()
+	
+	if event.is_action(&\"open_stats\"):
+		if event.is_pressed() and not event.is_echo():
+			_on_input()
+
+
+func _on_input():
+	if is_open: close()
+	else: open()
+
+
+func close():
+	hide()
+	is_open = false
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
+func open():
+	show()
+	is_open = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hhi8m"]
+bg_color = Color(0, 0.25, 0.125, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="GDScript" id="GDScript_l2rmg"]
+resource_name = "health"
+script/source = "extends ProgressBar
+
+
+@export var health: float = 100
+@export var death_screen: Control
+
+
+func _die():
+	death_screen.open()
+
+
+func subtract_health(amount: float):
+	health -= amount
+	value = health
+	if health <= 0:
+		health = 0
+		_die()
+"
+
+[sub_resource type="GDScript" id="GDScript_u0til"]
+resource_name = "hunger"
+script/source = "extends ProgressBar
+
+
+@export var hunger: float = 100
+@export var hunger_loss: float = 5
+@export var health: Node
+@export var health_loss: float = 10
+var timer: Timer
+
+
+func _process(delta):
+	if hunger > 0:
+		subtract_hunger(hunger_loss * delta)
+	else:
+		health.subtract_health(health_loss * delta)
+
+
+func add_hunger(amount: float):
+	hunger += amount
+	if hunger > 100:
+		hunger = 100
+	value = hunger
+
+
+func subtract_hunger(amount: float):
+	hunger -= amount
+	value = hunger
+"
+
+[sub_resource type="GDScript" id="GDScript_ofr4j"]
+resource_name = "thirst"
+script/source = "extends ProgressBar
+
+
+@export var thirst: float = 100
+@export var thirst_loss: float = 5
+@export var health: Node
+@export var health_loss: float = 10
+var timer: Timer
+
+
+func _process(delta):
+	if thirst > 0:
+		subtract_thirst(thirst_loss * delta)
+	else:
+		health.subtract_health(health_loss * delta)
+
+
+func add_thirst(amount: float):
+	thirst += amount
+	if thirst > 100:
+		thirst = 100
+	value = thirst
+
+
+func subtract_thirst(amount: float):
+	thirst -= amount
+	value = thirst
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fedof"]
+bg_color = Color(0, 0, 0, 0.498039)
+
+[sub_resource type="GDScript" id="GDScript_xuf0a"]
+resource_name = "death_screen"
+script/source = "extends Control
+
+
+var is_open: bool = true
+
+
+func _ready():
+	close()
+
+
+func _unhandled_input(event):
+	if is_open:
+		get_viewport().set_input_as_handled()
+
+
+func close():
+	hide()
+	is_open = false
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
+func open():
+	show()
+	is_open = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+"
+
+[sub_resource type="GDScript" id="GDScript_dsdk8"]
+resource_name = "restart"
+script/source = "extends Button
+
+
+func _ready():
+	pressed.connect(_on_pressed)
+
+
+func _on_pressed():
+	get_tree().reload_current_scene()
+"
+
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("camera")]
+collision_layer = 8
+script = SubResource("GDScript_06htj")
+camera = NodePath("Camera3D")
+gravity = Vector3(0, -9.8, 0)
+jump_force = 4.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.425, 0)
+shape = SubResource("CapsuleShape3D_4pkox")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("SeparationRayShape3D_auo46")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+script = SubResource("GDScript_liksb")
+
+[node name="Interactor" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera")]
+target_position = Vector3(0, 0, -1.1)
+hit_back_faces = false
+script = ExtResource("2_ig5ms")
+camera = NodePath("..")
+
+[node name="Inventory" type="Node3D" parent="Camera3D"]
+script = ExtResource("3_cu2ky")
+
+[node name="ViewmodelHandler" type="Node" parent="Camera3D" node_paths=PackedStringArray("stats")]
+script = SubResource("GDScript_emaw1")
+stats = [NodePath("../../UI/Stats/VBoxContainer/Health"), NodePath("../../UI/Stats/VBoxContainer/Hunger"), NodePath("../../UI/Stats/VBoxContainer/Thirst")]
+
+[node name="CraftingHandler" type="Node" parent="Camera3D"]
+script = SubResource("GDScript_ao3xj")
+
+[node name="Crafting" parent="." instance=ExtResource("3_xbkfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="PauseMenu" type="PanelContainer" parent="UI" node_paths=PackedStringArray("player")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_mlbqo")
+script = SubResource("GDScript_5tn73")
+player = NodePath("../..")
+
+[node name="ResumeHint" type="Label" parent="UI/PauseMenu"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "Press Esc again to close"
+
+[node name="InteractionHint" type="Label" parent="UI"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="InteractionCircle" type="TextureProgressBar" parent="UI"]
+custom_minimum_size = Vector2(128, 128)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+value = 50.0
+fill_mode = 4
+texture_progress = ExtResource("3_v2bbm")
+
+[node name="Stats" type="PanelContainer" parent="UI"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6gnuo")
+script = SubResource("GDScript_jwj28")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Stats"]
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="Health" type="ProgressBar" parent="UI/Stats/VBoxContainer" node_paths=PackedStringArray("death_screen")]
+custom_minimum_size = Vector2(200, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/fill = SubResource("StyleBoxFlat_hhi8m")
+value = 100.0
+show_percentage = false
+script = SubResource("GDScript_l2rmg")
+death_screen = NodePath("../../../DeathScreen")
+
+[node name="Label" type="Label" parent="UI/Stats/VBoxContainer/Health"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -11.5
+offset_right = 25.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Health"
+
+[node name="Hunger" type="ProgressBar" parent="UI/Stats/VBoxContainer" node_paths=PackedStringArray("health")]
+custom_minimum_size = Vector2(200, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/fill = SubResource("StyleBoxFlat_hhi8m")
+value = 48.83
+show_percentage = false
+script = SubResource("GDScript_u0til")
+hunger_loss = 0.5
+health = NodePath("../Health")
+health_loss = 2.0
+
+[node name="Label" type="Label" parent="UI/Stats/VBoxContainer/Hunger"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -11.5
+offset_right = 25.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Hunger"
+
+[node name="Thirst" type="ProgressBar" parent="UI/Stats/VBoxContainer" node_paths=PackedStringArray("health")]
+custom_minimum_size = Vector2(200, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/fill = SubResource("StyleBoxFlat_hhi8m")
+value = 100.0
+show_percentage = false
+script = SubResource("GDScript_ofr4j")
+thirst_loss = 1.0
+health = NodePath("../Health")
+health_loss = 1.0
+
+[node name="Label" type="Label" parent="UI/Stats/VBoxContainer/Thirst"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -11.5
+offset_right = 25.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Thirst"
+
+[node name="DeathScreen" type="PanelContainer" parent="UI"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fedof")
+script = SubResource("GDScript_xuf0a")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/DeathScreen"]
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="Label" type="Label" parent="UI/DeathScreen/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Dead!
+What a pathetic surprise"
+horizontal_alignment = 1
+
+[node name="Restart" type="Button" parent="UI/DeathScreen/VBoxContainer"]
+custom_minimum_size = Vector2(200, 75)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Restart"
+script = SubResource("GDScript_dsdk8")
