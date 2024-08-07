@@ -1,8 +1,8 @@
-[gd_scene load_steps=22 format=3 uid="uid://bhndpty3cacef"]
+[gd_scene load_steps=23 format=3 uid="uid://bhndpty3cacef"]
 
 [ext_resource type="Script" path="res://player/interactor.gd" id="2_ig5ms"]
 [ext_resource type="Script" path="res://player/inventory.gd" id="3_cu2ky"]
-[ext_resource type="Texture2D" uid="uid://bloo0hmavkrsm" path="res://progress_circle.svg" id="3_v2bbm"]
+[ext_resource type="Texture2D" uid="uid://bloo0hmavkrsm" path="res://assets/progress_circle.svg" id="3_v2bbm"]
 [ext_resource type="PackedScene" uid="uid://bko545hp5ectp" path="res://player/crafting/crafting.tscn" id="3_xbkfb"]
 
 [sub_resource type="GDScript" id="GDScript_06htj"]
@@ -19,6 +19,9 @@ script/source = "extends CharacterBody3D
 @export var smoothness: float = 0.1
 @export_range(0, 1) var air_control: float = 0.3
 @export var jump_force: float = 2
+@export var stamina: float = 100
+@export var stamina_regen_speed: float = 5
+@export var run_stamina_cost: float = 10
 
 
 var move_input: Vector2
@@ -69,7 +72,8 @@ func _physics_process(delta):
 	if direction:
 		var spd = speed
 		if not is_on_floor(): spd *= air_control
-		elif run_input: spd = run_speed
+		elif run_input and stamina >= run_stamina_cost * delta:
+			spd = run_speed
 		if is_crouching: spd *= 0.5
 		var t = direction * spd
 		var v = Vector3(velocity.x, 0, velocity.z)
@@ -84,7 +88,22 @@ func _physics_process(delta):
 
 	move_and_slide()
 	
+	if run_input:
+		_reduce_stamina(run_stamina_cost * delta)
+	else:
+		_regen_stamina(stamina_regen_speed * delta)
+	
 	_reset_input.call_deferred()
+
+
+func _reduce_stamina(amount: float):
+	stamina -= amount
+	if stamina < 0.0: stamina = 0
+
+
+func _regen_stamina(amount: float):
+	stamina += amount
+	if stamina > 100.0: stamina = 100
 
 
 func _reset_input():
@@ -328,9 +347,6 @@ func _ready():
 
 
 func _unhandled_input(event):
-	if is_open:
-		get_viewport().set_input_as_handled()
-	
 	if event.is_action(&\"open_stats\"):
 		if event.is_pressed() and not event.is_echo():
 			_on_input()
@@ -379,6 +395,18 @@ func subtract_health(amount: float):
 	if health <= 0:
 		health = 0
 		_die()
+"
+
+[sub_resource type="GDScript" id="GDScript_4xf0n"]
+resource_name = "stamina"
+script/source = "extends ProgressBar
+
+
+@export var player: Node
+
+
+func _process(_delta):
+	value = player.stamina
 "
 
 [sub_resource type="GDScript" id="GDScript_u0til"]
@@ -572,7 +600,6 @@ offset_right = 20.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
-value = 50.0
 fill_mode = 4
 texture_progress = ExtResource("3_v2bbm")
 
@@ -615,6 +642,32 @@ offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
 text = "Health"
+
+[node name="Stamina" type="ProgressBar" parent="UI/Stats/VBoxContainer" node_paths=PackedStringArray("player")]
+custom_minimum_size = Vector2(200, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/fill = SubResource("StyleBoxFlat_hhi8m")
+value = 100.0
+show_percentage = false
+script = SubResource("GDScript_4xf0n")
+player = NodePath("../../../..")
+
+[node name="Label" type="Label" parent="UI/Stats/VBoxContainer/Stamina"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -11.5
+offset_right = 25.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Stamina"
 
 [node name="Hunger" type="ProgressBar" parent="UI/Stats/VBoxContainer" node_paths=PackedStringArray("health")]
 custom_minimum_size = Vector2(200, 32)

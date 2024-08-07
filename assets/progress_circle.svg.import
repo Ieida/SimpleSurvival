@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bloo0hmavkrsm"
-path.s3tc="res://.godot/imported/progress_circle.svg-fe4d66671cbbb15b76139370cca2ec42.s3tc.ctex"
+path.s3tc="res://.godot/imported/progress_circle.svg-1736c24176961638aa176c80b543c247.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://progress_circle.svg"
-dest_files=["res://.godot/imported/progress_circle.svg-fe4d66671cbbb15b76139370cca2ec42.s3tc.ctex"]
+source_file="res://assets/progress_circle.svg"
+dest_files=["res://.godot/imported/progress_circle.svg-1736c24176961638aa176c80b543c247.s3tc.ctex"]
 
 [params]
 
