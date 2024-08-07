@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bo7opc5x5k1kf"
-path.s3tc="res://.godot/imported/craft_icon.svg-f32d33a205cbf4cdf7940785c824638f.s3tc.ctex"
+path.s3tc="res://.godot/imported/craft_icon.svg-7c1604327da0922e88d9f9094671a020.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://craft_icon.svg"
-dest_files=["res://.godot/imported/craft_icon.svg-f32d33a205cbf4cdf7940785c824638f.s3tc.ctex"]
+source_file="res://assets/craft_icon.svg"
+dest_files=["res://.godot/imported/craft_icon.svg-7c1604327da0922e88d9f9094671a020.s3tc.ctex"]
 
 [params]
 
