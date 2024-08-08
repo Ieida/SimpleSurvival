@@ -51,8 +51,7 @@ func _unhandled_input(event):
 
 func _physics_process(delta):
 	# Add the gravity.
-	if not is_on_floor():
-		velocity += gravity * delta
+	velocity += gravity * delta
 
 	# Handle jump.
 	if jump_input.pressed and is_on_floor():
@@ -486,7 +485,7 @@ func _ready():
 	close()
 
 
-func _unhandled_input(event):
+func _unhandled_input(_event):
 	if is_open:
 		get_viewport().set_input_as_handled()
 
