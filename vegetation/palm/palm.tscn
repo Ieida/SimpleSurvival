@@ -1,13 +1,14 @@
-[gd_scene load_steps=18 format=3 uid="uid://c1a6gsvt7ykis"]
+[gd_scene load_steps=19 format=3 uid="uid://c1a6gsvt7ykis"]
 
-[ext_resource type="Texture2D" uid="uid://b63jksveqddga" path="res://assets/ArthComit/PalmAndCoconut_PalmLeaf1.png" id="1_170it"]
-[ext_resource type="Texture2D" uid="uid://c4nd8qd76kugg" path="res://assets/ArthComit/PalmAndCoconut_PalmLeaf1_p-PalmLeaf1_s.png" id="2_f6xl2"]
-[ext_resource type="Texture2D" uid="uid://cskbngfi6qggp" path="res://assets/ArthComit/PalmAndCoconut_PalmLeaf1_n.png" id="3_p1fym"]
-[ext_resource type="Texture2D" uid="uid://c0uej5d5yjfl3" path="res://assets/ArthComit/PalmAndCoconut_Tree_1K_Albedo.png" id="4_1g5sb"]
-[ext_resource type="Texture2D" uid="uid://4y2i51tf3wa3" path="res://assets/ArthComit/PalmAndCoconut_Tree_1K_Roughness.png" id="5_c2asv"]
-[ext_resource type="Texture2D" uid="uid://cv1dcemyqv8su" path="res://assets/ArthComit/PalmAndCoconut_Tree_1K_NormalDX.png" id="6_ifldh"]
+[ext_resource type="Texture2D" uid="uid://b63jksveqddga" path="res://vegetation/palm/PalmAndCoconut_PalmLeaf1.png" id="1_170it"]
+[ext_resource type="Texture2D" uid="uid://c4nd8qd76kugg" path="res://vegetation/palm/PalmAndCoconut_PalmLeaf1_p-PalmLeaf1_s.png" id="2_f6xl2"]
+[ext_resource type="Texture2D" uid="uid://cskbngfi6qggp" path="res://vegetation/palm/PalmAndCoconut_PalmLeaf1_n.png" id="3_p1fym"]
+[ext_resource type="Texture2D" uid="uid://c0uej5d5yjfl3" path="res://vegetation/palm/PalmAndCoconut_Tree_1K_Albedo.png" id="4_1g5sb"]
+[ext_resource type="Texture2D" uid="uid://4y2i51tf3wa3" path="res://vegetation/palm/PalmAndCoconut_Tree_1K_Roughness.png" id="5_c2asv"]
+[ext_resource type="Texture2D" uid="uid://cv1dcemyqv8su" path="res://vegetation/palm/PalmAndCoconut_Tree_1K_NormalDX.png" id="6_ifldh"]
 [ext_resource type="PackedScene" uid="uid://6mcw0xrbe6pk" path="res://components/hitbox/hitbox.tscn" id="7_l18e7"]
 [ext_resource type="AudioStream" uid="uid://btsb3bd350t8w" path="res://vegetation/tree/421928__micahlg__chopping-wood-01.wav" id="8_bpmde"]
+[ext_resource type="PackedScene" uid="uid://ben6g1s4r35l5" path="res://vegetation/palm_trunk/palm_trunk.tscn" id="9_buu7j"]
 
 [sub_resource type="GDScript" id="GDScript_in36e"]
 resource_name = "palm"
@@ -33,7 +34,7 @@ func _spawn_stick(_pos: Vector3, nor: Vector3):
 	var stck = stck_scn.instantiate() as RigidBody3D
 	get_tree().current_scene.add_child(stck, true)
 	stck.global_position = global_position + Vector3(0, 6, 0) + nor
-	var n = nor if nor.length() == 1.0 else Vector3.UP
+	#var n = nor if nor.length() == 1.0 else Vector3.UP
 	#stck.apply_impulse(n * 4.0)
 
 
@@ -170,3 +171,30 @@ shape = SubResource("ConcavePolygonShape3D_x32d2")
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 stream = ExtResource("8_bpmde")
+
+[node name="PalmTrunk4" parent="." instance=ExtResource("9_buu7j")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -1.93333, 1.26667, 0)
+
+[node name="PalmTrunk3" parent="." instance=ExtResource("9_buu7j")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -1.53333, 1.26667, 0)
+
+[node name="PalmTrunk2" parent="." instance=ExtResource("9_buu7j")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -1.13333, 1.26667, 0)
+
+[node name="PalmTrunk" parent="." instance=ExtResource("9_buu7j")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -0.733333, 1.26667, 0)
+
+[node name="Generic6DOFJoint3D" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -1.03333, 1.26667, 0)
+node_a = NodePath("../PalmTrunk")
+node_b = NodePath("../PalmTrunk2")
+
+[node name="Generic6DOFJoint3D2" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -1.43333, 1.26667, 0)
+node_a = NodePath("../PalmTrunk2")
+node_b = NodePath("../PalmTrunk3")
+
+[node name="Generic6DOFJoint3D3" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -1.83333, 1.26667, 0)
+node_a = NodePath("../PalmTrunk3")
+node_b = NodePath("../PalmTrunk4")

@@ -1,9 +1,9 @@
 [gd_scene load_steps=10 format=3 uid="uid://covwkwrpdr5ij"]
 
 [ext_resource type="PackedScene" uid="uid://c0vmt7qdq55s" path="res://items/coconut/coconut.glb" id="1_esacr"]
-[ext_resource type="Texture2D" uid="uid://c0uej5d5yjfl3" path="res://assets/ArthComit/PalmAndCoconut_Tree_1K_Albedo.png" id="1_nc5p8"]
-[ext_resource type="Texture2D" uid="uid://4y2i51tf3wa3" path="res://assets/ArthComit/PalmAndCoconut_Tree_1K_Roughness.png" id="2_y8ksi"]
-[ext_resource type="Texture2D" uid="uid://cv1dcemyqv8su" path="res://assets/ArthComit/PalmAndCoconut_Tree_1K_NormalDX.png" id="3_w4yly"]
+[ext_resource type="Texture2D" uid="uid://c0uej5d5yjfl3" path="res://vegetation/palm/PalmAndCoconut_Tree_1K_Albedo.png" id="1_nc5p8"]
+[ext_resource type="Texture2D" uid="uid://4y2i51tf3wa3" path="res://vegetation/palm/PalmAndCoconut_Tree_1K_Roughness.png" id="2_y8ksi"]
+[ext_resource type="Texture2D" uid="uid://cv1dcemyqv8su" path="res://vegetation/palm/PalmAndCoconut_Tree_1K_NormalDX.png" id="3_w4yly"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5gyak"]
 
