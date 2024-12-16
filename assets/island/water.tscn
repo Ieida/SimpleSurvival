@@ -25,7 +25,7 @@ uniform vec4 colorDeep : source_color; // color of deep water
 uniform vec4 colorShallow : source_color; // color of shalow water
 uniform float beersLaw = 2.0; //value governing the fall off of light in the depths of water
 uniform float depthOffset = -0.75; // as above
-uniform sampler2D depthTextureRate : hint_depth_texture, filter_linear_mipmap;
+//uniform sampler2D depthTextureRate : hint_depth_texture, filter_linear_mipmap;
 uniform sampler2D screenTexture : hint_screen_texture, filter_linear_mipmap;
 
 // Edge Fome controllers
@@ -62,20 +62,20 @@ void fragment() {
 	// Called for every pixel the material is visible on.
 	
 	//Depth calculators
-	float depthTexture = texture(depthTextureRate, SCREEN_UV).r * 2.0 - 1.0;
-	float depth = PROJECTION_MATRIX[3][2] / (depthTexture + PROJECTION_MATRIX[2][2]);
-	float depthBlend = exp((depth+VERTEX.z + depthOffset)* -beersLaw);
-	depthBlend = clamp(1.0 - depthBlend, 0.0, 1.0);
-	float depthBlednPower = clamp(pow(depthBlend, 2.5), 0.0, 1.0);
+	//float depthTexture = texture(depthTextureRate, SCREEN_UV).r * 2.0 - 1.0;
+	//float depth = PROJECTION_MATRIX[3][2] / (depthTexture + PROJECTION_MATRIX[2][2]);
+	//float depthBlend = exp((depth+VERTEX.z + depthOffset)* -beersLaw);
+	//depthBlend = clamp(1.0 - depthBlend, 0.0, 1.0);
+	//float depthBlednPower = clamp(pow(depthBlend, 2.5), 0.0, 1.0);
 	
-	vec3 screenColor = textureLod(screenTexture, SCREEN_UV, depthBlednPower * 2.5).rgb;
-	vec3 depthColor = mix(colorShallow.rgb , colorDeep.rgb, depthBlednPower);
-	vec3 color = mix(screenColor * depthColor, depthColor * 0.25, depthBlednPower * 0.5);
+	//vec3 screenColor = textureLod(screenTexture, SCREEN_UV, depthBlednPower * 2.5).rgb;
+	//vec3 depthColor = mix(colorShallow.rgb , colorDeep.rgb, depthBlednPower);
+	//vec3 color = mix(screenColor * depthColor, depthColor * 0.25, depthBlednPower * 0.5);
 	
 	//edge calculators
-	float zDepth = edge(texture(depthTextureRate, SCREEN_UV).x);
-	float zPos = edge(FRAGCOORD.z);
-	float zDif = zDepth - zPos;
+	//float zDepth = edge(texture(depthTextureRate, SCREEN_UV).x);
+	//float zPos = edge(FRAGCOORD.z);
+	//float zDif = zDepth - zPos;
 	
 	
 	//setting up time conditions to create movement
@@ -90,10 +90,11 @@ void fragment() {
 	
 	vec3 normal = texture(textureNormal1,UV).rgb;
 	
-	vec3 depthColorAdj =  mix(edgeColor, color, step(edgeScale, zDif));
+	//vec3 depthColorAdj =  mix(edgeColor, color, step(edgeScale, zDif));
 	
 	
-	ALBEDO = clamp(surfaceColor + depthColorAdj, vec3(0.0), vec3(1.0));//mix(surfaceColor, color, 0.75);
+	//ALBEDO = clamp(surfaceColor + depthColorAdj, vec3(0.0), vec3(1.0));//mix(surfaceColor, color, 0.75);
+	ALBEDO = clamp(surfaceColor, vec3(0.0), vec3(1.0));
 	METALLIC = metallic;
 	ROUGHNESS = roughness;
 	NORMAL_MAP = normalBlend;

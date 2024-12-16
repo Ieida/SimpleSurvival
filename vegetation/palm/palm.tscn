@@ -1,7 +1,8 @@
-[gd_scene load_steps=19 format=3 uid="uid://c1a6gsvt7ykis"]
+[gd_scene load_steps=20 format=3 uid="uid://c1a6gsvt7ykis"]
 
 [ext_resource type="Texture2D" uid="uid://b63jksveqddga" path="res://vegetation/palm/PalmAndCoconut_PalmLeaf1.png" id="1_170it"]
 [ext_resource type="Texture2D" uid="uid://c4nd8qd76kugg" path="res://vegetation/palm/PalmAndCoconut_PalmLeaf1_p-PalmLeaf1_s.png" id="2_f6xl2"]
+[ext_resource type="PackedScene" uid="uid://dvsijvj7rwudq" path="res://components/destructible_joint/destructible_joint.tscn" id="2_qvmqb"]
 [ext_resource type="Texture2D" uid="uid://cskbngfi6qggp" path="res://vegetation/palm/PalmAndCoconut_PalmLeaf1_n.png" id="3_p1fym"]
 [ext_resource type="Texture2D" uid="uid://c0uej5d5yjfl3" path="res://vegetation/palm/PalmAndCoconut_Tree_1K_Albedo.png" id="4_1g5sb"]
 [ext_resource type="Texture2D" uid="uid://4y2i51tf3wa3" path="res://vegetation/palm/PalmAndCoconut_Tree_1K_Roughness.png" id="5_c2asv"]
@@ -143,15 +144,52 @@ data = PackedVector3Array(-0.0259, -0.1975, 0.0302, 0.266, -0.0112, -0.0745, 0.0
 [node name="Palm" type="Node3D"]
 script = SubResource("GDScript_in36e")
 
+[node name="Trunk" type="Node3D" parent="."]
+
+[node name="PalmTrunk4" parent="Trunk" instance=ExtResource("9_buu7j")]
+transform = Transform3D(1, -1.06581e-14, 0, 1.06581e-14, 1, 0, 0, 0, 1, 0, 1.8, 0)
+freeze_mode = 1
+
+[node name="DestructibleJoint3" parent="Trunk" instance=ExtResource("2_qvmqb")]
+transform = Transform3D(1, -1.06581e-14, 0, 1.06581e-14, 1, 0, 0, 0, 1, 4.23516e-22, 1.6, 0.1)
+node_a = NodePath("../PalmTrunk3")
+node_b = NodePath("../PalmTrunk4")
+
+[node name="PalmTrunk3" parent="Trunk" instance=ExtResource("9_buu7j")]
+transform = Transform3D(1, -1.06581e-14, 0, 1.06581e-14, 1, 0, 0, 0, 1, 0, 1.2, 0)
+freeze_mode = 1
+
+[node name="DestructibleJoint2" parent="Trunk" instance=ExtResource("2_qvmqb")]
+transform = Transform3D(1, -1.06581e-14, 0, 1.06581e-14, 1, 0, 0, 0, 1, 0, 1, 0.1)
+node_a = NodePath("../PalmTrunk2")
+node_b = NodePath("../PalmTrunk3")
+
+[node name="PalmTrunk2" parent="Trunk" instance=ExtResource("9_buu7j")]
+transform = Transform3D(1, -1.06581e-14, 0, 1.06581e-14, 1, 0, 0, 0, 1, 0, 0.6, 0)
+freeze_mode = 1
+
+[node name="DestructibleJoint" parent="Trunk" instance=ExtResource("2_qvmqb")]
+transform = Transform3D(1, -1.06581e-14, 0, 1.06581e-14, 1, 0, 0, 0, 1, 0, 0.4, 0.1)
+node_a = NodePath("../PalmTrunk")
+node_b = NodePath("../PalmTrunk2")
+
+[node name="PalmTrunk" parent="Trunk" instance=ExtResource("9_buu7j")]
+transform = Transform3D(1, -1.06581e-14, 0, 1.06581e-14, 1, 0, 0, 0, 1, 0, 0, 0)
+freeze = true
+freeze_mode = 1
+
 [node name="SimplePalmGen_002" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("ArrayMesh_dp087")
 skeleton = NodePath("")
 
 [node name="SimplePalmGen_001" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("ArrayMesh_0ink4")
 skeleton = NodePath("")
 
 [node name="Hitbox" parent="." instance=ExtResource("7_l18e7")]
+collision_layer = 0
 health = 1000.0
 
 [node name="Leaves" type="CollisionShape3D" parent="Hitbox"]
@@ -161,6 +199,8 @@ shape = SubResource("ConcavePolygonShape3D_qx24u")
 shape = SubResource("ConcavePolygonShape3D_x32d2")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 0
+collision_mask = 0
 
 [node name="Leaves" type="CollisionShape3D" parent="StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_qx24u")
@@ -171,30 +211,3 @@ shape = SubResource("ConcavePolygonShape3D_x32d2")
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 stream = ExtResource("8_bpmde")
-
-[node name="PalmTrunk4" parent="." instance=ExtResource("9_buu7j")]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -1.93333, 1.26667, 0)
-
-[node name="PalmTrunk3" parent="." instance=ExtResource("9_buu7j")]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -1.53333, 1.26667, 0)
-
-[node name="PalmTrunk2" parent="." instance=ExtResource("9_buu7j")]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -1.13333, 1.26667, 0)
-
-[node name="PalmTrunk" parent="." instance=ExtResource("9_buu7j")]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -0.733333, 1.26667, 0)
-
-[node name="Generic6DOFJoint3D" type="Generic6DOFJoint3D" parent="."]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -1.03333, 1.26667, 0)
-node_a = NodePath("../PalmTrunk")
-node_b = NodePath("../PalmTrunk2")
-
-[node name="Generic6DOFJoint3D2" type="Generic6DOFJoint3D" parent="."]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -1.43333, 1.26667, 0)
-node_a = NodePath("../PalmTrunk2")
-node_b = NodePath("../PalmTrunk3")
-
-[node name="Generic6DOFJoint3D3" type="Generic6DOFJoint3D" parent="."]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -1.83333, 1.26667, 0)
-node_a = NodePath("../PalmTrunk3")
-node_b = NodePath("../PalmTrunk4")

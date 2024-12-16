@@ -1,0 +1,55 @@
+[gd_scene load_steps=4 format=3 uid="uid://dvsijvj7rwudq"]
+
+[ext_resource type="PackedScene" uid="uid://6mcw0xrbe6pk" path="res://components/hitbox/hitbox.tscn" id="1_qlnr2"]
+
+[sub_resource type="GDScript" id="GDScript_v24a1"]
+resource_name = "destructible_joint"
+script/source = "extends Generic6DOFJoint3D
+
+
+@onready var hitbox: Hitbox = $Hitbox
+var last_hit_info: HitInfo
+
+
+func _ready():
+	hitbox.hit_recieved.connect(_on_hitbox_hit_recieved)
+	hitbox.health_depleted.connect(_on_hitbox_health_depleted)
+
+
+func _physics_process(_delta):
+	if node_a.is_empty():
+		queue_free()
+		var n = get_node(node_b) as RigidBody3D
+		if n: n.apply_torque_impulse(Vector3(0, 100, 0))
+	elif node_b.is_empty():
+		queue_free()
+
+
+func _on_hitbox_health_depleted():
+	node_a = NodePath(\"\")
+	var b = get_node(node_b) as RigidBody3D
+	node_b = NodePath(\"\")
+	queue_free()
+	if b:
+		var p = global_basis.y.cross(last_hit_info.normal)
+		b.apply_impulse(last_hit_info.normal * 0.1, last_hit_info.position)
+		b.apply_torque_impulse(p)
+
+
+func _on_hitbox_hit_recieved(info: HitInfo):
+	if hitbox.is_health_depleted:
+		last_hit_info = info
+"
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ag2s5"]
+height = 0.2
+radius = 0.3
+
+[node name="DestructibleJoint" type="Generic6DOFJoint3D"]
+script = SubResource("GDScript_v24a1")
+
+[node name="Hitbox" parent="." instance=ExtResource("1_qlnr2")]
+health = 150.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hitbox"]
+shape = SubResource("CylinderShape3D_ag2s5")

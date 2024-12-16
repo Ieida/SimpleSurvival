@@ -1,0 +1,36 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://ddgcj8lsih53k"
+path.s3tc="res://.godot/imported/veggies_Default_wild_stylized_Beautyful_onions_2 (1)_n.png-9c1f4e3292c66da40c31fa599fd8c2af.s3tc.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
+}
+generator_parameters={}
+
+[deps]
+
+source_file="res://assets/ToSortGlb/veggies_Default_wild_stylized_Beautyful_onions_2 (1)_n.png"
+dest_files=["res://.godot/imported/veggies_Default_wild_stylized_Beautyful_onions_2 (1)_n.png-9c1f4e3292c66da40c31fa599fd8c2af.s3tc.ctex"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/normal_map=1
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=1
+roughness/src_normal="res://assets/ToSortGlb/veggies_Default_wild_stylized_Beautyful_onions_2 (1)_n.png"
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=0
